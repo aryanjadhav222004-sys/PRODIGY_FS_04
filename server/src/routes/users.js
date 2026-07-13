@@ -1,0 +1,28 @@
+const express = require('express')
+const router = express.Router()
+const { authenticate } = require('../middleware/auth')
+const { validatePagination, validateMongoId, handleValidationErrors } = require('../middleware/validation')
+const { body } = require('express-validator')
+const userController = require('../controllers/userController')
+const upload = require('../middleware/upload')
+
+router.use(authenticate)
+
+router.get('/friends', userController.getFriends)
+router.post('/friends/:userId', validateMongoId('userId'), userController.sendFriendRequest)
+router.post('/friends/:userId/accept', validateMongoId('userId'), userController.acceptFriendRequest)
+router.delete('/friends/:userId/reject', validateMongoId('userId'), userController.rejectFriendRequest)
+router.delete('/friends/:userId', validateMongoId('userId'), userController.removeFriend)
+router.get('/friends/requests', userController.getFriendRequests)
+router.post('/block/:userId', validateMongoId('userId'), userController.blockUser)
+router.delete('/block/:userId', validateMongoId('userId'), userController.unblockUser)
+router.get('/blocked', userController.getBlockedUsers)
+router.get('/settings', userController.getSettings)
+router.put('/settings', body('notifications').optional().isObject(), body('privacy').optional().isObject(), body('theme').optional().isIn(['light', 'dark', 'system']), handleValidationErrors, userController.updateSettings)
+router.get('/profile', userController.getProfile)
+router.get('/profile/:userId', userController.getProfile)
+router.put('/profile', body('username').optional().trim().isLength({ min: 3, max: 30 }), body('bio').optional().isString().isLength({ max: 500 }), body('customStatus').optional().isString().isLength({ max: 100 }), handleValidationErrors, userController.updateProfile)
+router.post('/avatar', upload.single('avatar'), userController.uploadAvatar)
+router.delete('/avatar', userController.deleteAvatar)
+
+module.exports = router
