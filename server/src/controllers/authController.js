@@ -1,7 +1,7 @@
 const { generateTokens } = require('../utils/jwt');
 const { User } = require('../models');
 const { BadRequestError, UnauthorizedError, ConflictError } = require('../middleware/errorHandler');
-const { asyncHandler } = require('../utils/asyncHandler');
+const asyncHandler = require('../utils/asyncHandler');
 
 const register = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;

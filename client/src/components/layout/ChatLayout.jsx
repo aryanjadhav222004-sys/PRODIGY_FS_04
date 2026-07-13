@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectSidebarOpen, selectMobileSidebarOpen, selectMobileView } from '../../store/slices/uiSlice'
+import { selectSidebarOpen, selectMobileSidebarOpen, selectMobileView, selectModals, closeModal } from '../../store/slices/uiSlice'
 import Header from './Header'
 import Sidebar from './Sidebar'
+import CreateRoomModal from '../chat/CreateRoomModal'
 import { clsx } from 'clsx'
 
 export default function ChatLayout() {
@@ -11,6 +12,7 @@ export default function ChatLayout() {
   const sidebarOpen = useSelector(selectSidebarOpen)
   const mobileSidebarOpen = useSelector(selectMobileSidebarOpen)
   const mobileView = useSelector(selectMobileView)
+  const showCreateRoomModal = useSelector(state => state.ui.modals.createRoom)
   const [showSidebar, setShowSidebar] = useState(false)
 
   // Handle responsive behavior
@@ -77,6 +79,12 @@ export default function ChatLayout() {
           <Outlet />
         </div>
       </main>
+
+      {/* Create Room Modal */}
+      <CreateRoomModal 
+        isOpen={showCreateRoomModal}
+        onClose={() => dispatch({ type: 'ui/closeModal', payload: 'createRoom' })}
+      />
     </div>
   )
 }
