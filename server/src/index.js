@@ -37,6 +37,11 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason)
 })
 
+// Async handler wrapper for Express 5
+const asyncHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next)
+}
+
 // Socket.io setup
 const io = new Server(server, {
   cors: {

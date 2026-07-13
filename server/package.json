@@ -9,7 +9,8 @@
     "start": "node src/index.js",
     "build": "echo 'No build step required for server'",
     "lint": "eslint src/",
-    "test": "jest"
+    "test": "jest",
+    "seed": "node scripts/seed.js"
   },
   "keywords": [
     "chat",
